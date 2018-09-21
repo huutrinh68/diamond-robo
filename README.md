@@ -52,3 +52,24 @@
     }
   }
 ```
+###### _gunDataManager.execute()
+
+```javascript
+  public void execute(int currentRound, long currentTime, double bulletPower,
+      double currentGunHeat, Point2D.Double myLocation, boolean is1v1,
+      boolean painting) {
+    updateBotDistances(myLocation);
+    for (GunEnemy gunData : getAllEnemyData()) {
+      if (gunData.alive) {
+        gunData.execute(currentTime, _lastBulletFiredTime, bulletPower,
+            currentGunHeat, myLocation, is1v1, _enemiesTotal, _listeners,
+            painting);
+      }
+    }
+    if (painting && _victoryGraphics.containsKey(currentTime)) {
+      for (RoboGraphic graphic : _victoryGraphics.get(currentTime)) {
+        _renderables.add(graphic);
+      }
+    }
+  }
+```
