@@ -73,6 +73,8 @@
     }
   }
 ```
+###### [gunData.execute](https://github.com/huutrinh68/diamond-robo/blob/master/voidious/gun/GunEnemy.java)
+
 ###### calculateBulletPower()
 ```javascript
   double calculateBulletPower() {
