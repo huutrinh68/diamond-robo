@@ -6,8 +6,6 @@ public void run() {
       initComponents();
       initColors();
 
-      # ロボット回転する時に、大砲が逆方向に回転
-      # 大砲が回転する時にRadarが逆方向に回転
       setAdjustGunForRobotTurn(true);
       setAdjustRadarForGunTurn(true);
 
