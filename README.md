@@ -1,4 +1,4 @@
-# diamond-robo-gunn
+# diamond-robo-gun
 ```javascript
   private static DiamondFist _gun;
 
@@ -72,4 +72,62 @@
       }
     }
   }
+```
+###### calculateBulletPower()
+```javascript
+  double calculateBulletPower() {
+    GunEnemy gunData = _gunDataManager.getClosestLivingBot(myLocation());
+    double bulletPower = 3;
+    if (gunData != null) {
+      double myEnergy = _robot.getEnergy();
+      if (_tcMode) {
+        bulletPower = Math.min(myEnergy, 3);
+      } else if (is1v1()) {
+        bulletPower = 1.95;
+
+        if (gunData.distance < 150 || gunData.isRammer()) {
+          bulletPower = 2.95;
+        }
+
+        if (gunData.distance > 325) {
+          double powerDownPoint =
+              DiaUtils.limit(35, 63 + ((gunData.energy - myEnergy) * 4), 63);
+          if (myEnergy < powerDownPoint) {
+            bulletPower = Math.min(bulletPower,
+                DiaUtils.cube(myEnergy / powerDownPoint) * 1.95);
+          }
+        }
+
+        bulletPower = Math.min(bulletPower, gunData.energy / 4);
+        bulletPower = Math.max(bulletPower, 0.1);
+        bulletPower = Math.min(bulletPower, myEnergy);
+      } else {
+        double avgEnemyEnergy = _gunDataManager.getAverageEnergy();
+
+        bulletPower = 2.999;
+
+        int enemiesAlive = _robot.getOthers();
+        if (enemiesAlive <= 3) {
+          bulletPower = 1.999;
+        }
+
+        if (enemiesAlive <= 5 && gunData.distance > 500) {
+          bulletPower = 1.499;
+        }
+
+        if ((myEnergy < avgEnemyEnergy && enemiesAlive <= 5
+                && gunData.distance > 300)
+            || gunData.distance > 700) {
+          bulletPower = 0.999;
+        }
+
+        if (myEnergy < 20 && myEnergy < avgEnemyEnergy) {
+          bulletPower =
+              Math.min(bulletPower, 2 - ((20 - myEnergy) / 11));
+        }
+
+        bulletPower = Math.max(bulletPower, 0.1);
+        bulletPower = Math.min(bulletPower, myEnergy);
+      }
+    }
 ```
