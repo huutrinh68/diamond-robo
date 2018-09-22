@@ -28,6 +28,7 @@
   }
 ```
 ###### _gun.execute()
+1vs1 and Melee
 
 ```javascript
   public void execute() {
