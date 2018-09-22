@@ -1,4 +1,4 @@
-# diamond-robo-gun
+# [diamond-robo-gun](http://robowiki.net/wiki/Diamond)
 ```javascript
   private static DiamondFist _gun;
 
@@ -28,7 +28,7 @@
   }
 ```
 ###### _gun.execute()
-1vs1 and Melee
+1vs1: VituralGun and Melee: Melee Gun 
 
 ```javascript
   public void execute() {
