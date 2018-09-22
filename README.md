@@ -155,7 +155,7 @@ aimAndFire(), aimAndFireAtEveryone() => Find out the firingAngle, the best gun b
     }
   }
 ```
-Using meleGun to fire the closestBot
+Using meleeGun to fire the closestBot
 ```javascript
   private void aimAndFireAtEveryone() {
     GunEnemy closestBot = _gunDataManager.getClosestLivingBot(myLocation());
