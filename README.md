@@ -1,6 +1,6 @@
 # [diamond-robo-gun](http://robowiki.net/wiki/Diamond)
 ###### using knn to predict guessFactor, then calcualate firingAngle (in PerceptualGun class, TripHammerKnnGun class)
-###### 
+###### using displacementVector in MeleeGun to find out the firingAngle
 ```javascript
   private static DiamondFist _gun;
 
