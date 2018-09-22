@@ -1,4 +1,6 @@
 # [diamond-robo-gun](http://robowiki.net/wiki/Diamond)
+###### using knn to predict guessFactor, then calcualate firing (in PerceptualGun class, TripHammerKnnGun class)
+###### 
 ```javascript
   private static DiamondFist _gun;
 
