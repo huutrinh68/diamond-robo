@@ -133,3 +133,44 @@
       }
     }
 ```
+aimAndFire(), aimAndFireAtEveryone() => Find out the firingAngle, the best gun by evaluating vituralGun.
+```javascript
+  private void aimAndFire(GunEnemy gunData) {
+    if (gunData != null) {
+      fireIfGunTurned(_aimedBulletPower);
+
+      Wave aimWave = gunData.lastWaveFired;
+      _aimedBulletPower = aimWave.bulletPower();
+      Point2D.Double myNextLocation = _predictor.nextLocation(_robot);
+      double firingAngle;
+      if (gunData.energy == 0 || ticksUntilGunCool() > 3) {
+        firingAngle =
+            DiaUtils.absoluteBearing(myNextLocation, aimWave.targetLocation);
+        evaluateVirtualGuns(gunData);
+      } else {
+        firingAngle = _currentGun.aim(aimWave, paintStatus());
+      }
+      _robot.setTurnGunRightRadians(Utils.normalRelativeAngle(
+          firingAngle - _robot.getGunHeadingRadians()));
+    }
+  }
+```
+```javascript
+  private void aimAndFireAtEveryone() {
+    GunEnemy closestBot = _gunDataManager.getClosestLivingBot(myLocation());
+    if (closestBot != null) {
+      fireIfGunTurned(_aimedBulletPower);
+      Point2D.Double myNextLocation = _predictor.nextLocation(_robot);
+      long ticksUntilFire = ticksUntilGunCool();
+
+      if (ticksUntilFire % 2 == 0 || ticksUntilFire <= 4) {
+        _aimedBulletPower = calculateBulletPower();
+        double firingAngle = _meleeGun.aimAtEveryone(myNextLocation,
+            _robot.getTime(), _robot.getOthers(), _aimedBulletPower,
+            closestBot, paintStatus());
+        _robot.setTurnGunRightRadians(Utils.normalRelativeAngle(
+            firingAngle - _robot.getGunHeadingRadians()));
+      }
+    }
+  }
+```
