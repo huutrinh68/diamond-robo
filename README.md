@@ -1,6 +1,7 @@
 # [diamond-robo-gun](http://robowiki.net/wiki/Diamond)
 ###### using knn to predict guessFactor, then calcualate firingAngle (in PerceptualGun class, TripHammerKnnGun class)
-###### using displacementVector in MeleeGun to find out the firingAngle
+###### _gun.execute()
+1vs1: VituralGun and Melee: Melee Gun 
 ```javascript
   private static DiamondFist _gun;
 
@@ -29,9 +30,6 @@
     }
   }
 ```
-###### _gun.execute()
-1vs1: VituralGun and Melee: Melee Gun 
-
 ```javascript
   public void execute() {
     _gunDataManager.execute(_robot.getRoundNum(), _robot.getTime(),
@@ -177,4 +175,42 @@ Using meleeGun to fire the closestBot
       }
     }
   }
+```
+###### using displacementVector in MeleeGun to find out the firingAngle
+```javascript
+    public double aimAtEveryone(Point2D.Double myNextLocation,
+      long currentTime, int enemiesAlive, double bulletPower,
+      GunEnemy closestBot, boolean painting) {
+    List<MeleeFiringAngle> firingAngles = new ArrayList<MeleeFiringAngle>();
+
+    int kSize = getCommonKsize(enemiesAlive);
+    for (GunEnemy gunData : _gunDataManager.getAllEnemyData()) {
+      if (gunData.alive && gunData.views.get(VIEW_NAME).size() >= 10
+          && gunData.lastWaveFired != null) {
+        List<MeleeFiringAngle> enemyAngles = new ArrayList<MeleeFiringAngle>();
+        Wave aimWave = gunData.lastWaveFired;
+        aimWave.setBulletPower(bulletPower);
+        KnnView<TimestampedFiringAngle> view = gunData.views.get(VIEW_NAME);
+        List<Entry<TimestampedFiringAngle>> nearestNeighbors =
+            view.nearestNeighbors(aimWave, true, kSize);
+
+        int numScans = nearestNeighbors.size();
+        double totalScanWeight = 0;
+        for (int x = 0; x < numScans; x++) {
+          Entry<TimestampedFiringAngle> entry = nearestNeighbors.get(x);
+          double scanWeight = 1 / Math.sqrt(entry.distance);
+          totalScanWeight += scanWeight;
+          Point2D.Double vector = entry.value.displacementVector;
+          MeleeFiringAngle firingAngle = getFiringAngle(
+              myNextLocation, currentTime, vector, scanWeight, aimWave);
+          if (firingAngle != null) {
+            enemyAngles.add(firingAngle);
+          }
+        }
+        for (MeleeFiringAngle enemyAngle : enemyAngles) {
+          enemyAngle.scanWeight /= totalScanWeight;
+        }
+        firingAngles.addAll(enemyAngles);
+      }
+   }
 ```
